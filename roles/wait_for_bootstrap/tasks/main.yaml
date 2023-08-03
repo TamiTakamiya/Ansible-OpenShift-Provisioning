@@ -1,5 +1,4 @@
 ---
-
 - name: Start openshift-installer with 'wait-for bootstrap-complete' (async task)
   tags: wait_for_bootstrap
   ansible.builtin.command: openshift-install wait-for bootstrap-complete --dir=/root/ocpinst
@@ -8,8 +7,8 @@
   poll: 0
   register: watch_bootstrap
 
-- name: "Wait for first node-bootstrapper request. Takes < 10 min with good network connection (retry every 30s)...To watch progress, \
-SSH to root@bastion, SSH to core@bootstrap-ip and run 'journalctl -b -f -u release-image.service -u bootkube.service'"
+- name: Wait for first node-bootstrapper request. Takes < 10 min with good network connection (retry every 30s)...To watch progress, SSH to root@bastion, SSH to core@bootstrap-ip
+    and run 'journalctl -b -f -u release-image.service -u bootkube.service'
   tags: wait_for_bootstrap
   ansible.builtin.shell: |
     set -o pipefail
@@ -24,8 +23,8 @@ SSH to root@bastion, SSH to core@bootstrap-ip and run 'journalctl -b -f -u relea
   ansible.builtin.debug:
     var: csr_check.stdout_lines
 
-- name: "Retry wait-for bootstrap-complete job ID check until it's finished. This may take some time... To watch progress, \
-SSH to bastion, switch to root, from there, SSH to core@bootstrap-ip and run 'journalctl -b -f -u release-image.service -u bootkube.service'"
+- name: Retry wait-for bootstrap-complete job ID check until it's finished. This may take some time... To watch progress, SSH to bastion, switch to root, from there,
+    SSH to core@bootstrap-ip and run 'journalctl -b -f -u release-image.service -u bootkube.service'
   tags: wait_for_bootstrap
   ansible.builtin.async_status:
     jid: "{{ watch_bootstrap.ansible_job_id }}"

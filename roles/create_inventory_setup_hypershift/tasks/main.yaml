@@ -1,5 +1,4 @@
 ---
-
 - name: Find inventory directory from ansible.cfg
   tags: set_inventory
   shell: cat {{ ansible_config_file }} | grep 'inventory=' | cut -f2 -d"="
@@ -20,7 +19,7 @@
 
 - name: Check if SSH key exists
   stat:
-    path: "~/.ssh/{{ env.ansible_key_name }}.pub"
+    path: ~/.ssh/{{ env.ansible_key_name }}.pub
   register: ssh_key
 
 - name: Generate SSH key

@@ -35,7 +35,7 @@
               - "Execute: 'ansible-playbook playbooks/add_compute_node.yaml --extra-vars \"@extra-cnode.yml\"'"
         - name: Abort playbook
           ansible.builtin.fail:
-            msg: "See above error!"
+            msg: See above error!
 
   roles:
     - role: common

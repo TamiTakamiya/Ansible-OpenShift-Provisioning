@@ -1,5 +1,4 @@
 ---
-
 - name: Copy SSH key to access KVM host 1
   hosts: localhost
   tags: ssh, ssh_copy_id, section_1, kvm_host_1
@@ -9,7 +8,7 @@
   vars_files:
     - "{{ inventory_dir }}/group_vars/all.yaml"
   vars:
-    ssh_target: ["{{ env.z.lpar1.ip }}","{{ env.z.lpar1.user }}","{{ env.z.lpar1.pass }}","{{ path_to_key_pair }}"]
+    ssh_target: ["{{ env.z.lpar1.ip }}", "{{ env.z.lpar1.user }}", "{{ env.z.lpar1.pass }}", "{{ path_to_key_pair }}"]
   tasks:
     - name: Include vars for the KVM host.
       include_vars:
@@ -28,7 +27,7 @@
   vars_files:
     - "{{ inventory_dir }}/group_vars/all.yaml"
   vars:
-    ssh_target: ["{{ env.z.lpar2.ip }}","{{ env.z.lpar2.user }}","{{ env.z.lpar2.pass }}","{{ path_to_key_pair }}"]
+    ssh_target: ["{{ env.z.lpar2.ip }}", "{{ env.z.lpar2.user }}", "{{ env.z.lpar2.pass }}", "{{ path_to_key_pair }}"]
   tasks:
     - name: Include vars for second KVM host.
       include_vars:
@@ -50,7 +49,7 @@
   vars_files:
     - "{{ inventory_dir }}/group_vars/all.yaml"
   vars:
-    ssh_target: ["{{ env.z.lpar3.ip }}","{{ env.z.lpar3.user }}","{{ env.z.lpar3.pass }}","{{ path_to_key_pair }}"]
+    ssh_target: ["{{ env.z.lpar3.ip }}", "{{ env.z.lpar3.user }}", "{{ env.z.lpar3.pass }}", "{{ path_to_key_pair }}"]
   tasks:
     - name: Include vars for third KVM host.
       include_vars:
@@ -79,21 +78,21 @@
       tags: firewall-libvirt, libvirt
       ansible.posix.firewalld:
         port: 80/tcp
-        permanent: yes
+        permanent: true
         state: enabled
 
     - name: Start and enable libvirt
       tags: firewall-libvirt, libvirt
       ansible.builtin.service:
         name: libvirtd
-        enabled: yes
+        enabled: true
         state: started
 
     - name: Permit traffic in libvirt zone
       tags: firewall-libvirt, libvirt
       ansible.posix.firewalld:
         service: http
-        permanent: yes
+        permanent: true
         state: enabled
         zone: libvirt
         immediate: true
@@ -103,13 +102,13 @@
       ansible.builtin.lineinfile:
         path: /etc/libvirt/qemu.conf
         regexp: '#group = "root"'
-        line: 'group = "libvirt"'
+        line: group = "libvirt"
         backup: true
 
     - name: Create file for user's custom libvirt configurations.
       tags: libvirt
       ansible.builtin.file:
-        path: "/home/{{ ansible_user }}/.config/libvirt/libvirt.conf"
+        path: /home/{{ ansible_user }}/.config/libvirt/libvirt.conf
         state: touch
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
@@ -119,11 +118,11 @@
       ansible.builtin.lineinfile:
         path: "{{ item }}"
         regexp: '#uri_default = "qemu:///system"'
-        line: 'uri_default = "qemu:///system"'
+        line: uri_default = "qemu:///system"
         backup: true
       loop:
         - /etc/libvirt/qemu.conf
-        - "/home/{{ ansible_user }}/.config/libvirt/libvirt.conf"
+        - /home/{{ ansible_user }}/.config/libvirt/libvirt.conf
         - /etc/libvirt/libvirt.conf
 
     - name: Ensure KVM admin user is part of groups 'kvm', 'libvirt'.
@@ -137,7 +136,7 @@
       tags: firewall-libvirt, libvirt
       ansible.builtin.service:
         name: libvirtd
-        enabled: yes
+        enabled: true
         state: restarted
 
     - name: Enable cockpit console
